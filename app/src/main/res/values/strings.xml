@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">JetpackComposeLearning</string>
+    <string name="title_activity_image_and_text_play">ImageAndTextPlayActivity</string>
 </resources>

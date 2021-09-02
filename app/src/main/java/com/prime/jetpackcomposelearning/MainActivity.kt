@@ -120,11 +120,11 @@ fun ShowSwitch(){
     )
 }
 
-@Preview(showBackground = true, name = "Light Mode")
-//@Preview(showBackground = true, name = "Dark Mode", uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun DefaultPreview() {
-    JetpackComposeLearningTheme {
-        Greeting()
-    }
-}
+//@Preview(showBackground = true, name = "Light Mode")
+////@Preview(showBackground = true, name = "Dark Mode", uiMode = Configuration.UI_MODE_NIGHT_YES)
+//@Composable
+//fun DefaultPreview() {
+//    JetpackComposeLearningTheme {
+//        Greeting()
+//    }
+//}
