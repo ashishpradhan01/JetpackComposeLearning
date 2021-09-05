@@ -5,11 +5,11 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.ScrollableState
-import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
@@ -18,15 +18,15 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.prime.jetpackcomposelearning.ui.theme.JetpackComposeLearningTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 class LoginActivity : ComponentActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,8 +47,12 @@ class LoginActivity : ComponentActivity(){
         }
     }
 
+
     @Composable
-    fun LoginFields(){
+    fun LoginFieldsAndButton(
+        scaffoldState: ScaffoldState,
+        scope: CoroutineScope,
+    ){
         var username:String by remember {
             mutableStateOf("")
         }
@@ -104,7 +108,19 @@ class LoginActivity : ComponentActivity(){
                 modifier = Modifier.padding(top = 40.dp)
             )
             Button(
-                onClick = { checkAuthentication(username, password) },
+                onClick = {
+                    if (username.isNotEmpty() && password.isNotEmpty())
+                        scope.launch {
+                            scaffoldState.snackbarHostState
+                                .showSnackbar("$username $password",)
+                        }
+                    else
+                        scope.launch {
+                            scaffoldState.snackbarHostState
+                                .showSnackbar("Please fill details")
+                        }
+//                    checkAuthentication(username, password)
+                          },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(50.dp)
             ) {
@@ -122,14 +138,23 @@ class LoginActivity : ComponentActivity(){
     @Composable
     fun LoginScreen(){
         JetpackComposeLearningTheme {
-            Surface(
-                color = MaterialTheme.colors.background,
+            val scaffoldState = rememberScaffoldState()
+            val scope = rememberCoroutineScope()
+            val scrollScope = rememberScrollState()
+            Scaffold(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxSize(),
+                scaffoldState = scaffoldState
             ) {
-                Column {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(scrollScope)
+                ) {
                     Column(
-                        modifier = Modifier.padding(top = 50.dp, start = 20.dp, end = 20.dp)
+                        modifier = Modifier
+                            .padding(top = 50.dp, start = 20.dp, end = 20.dp)
+
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -147,7 +172,10 @@ class LoginActivity : ComponentActivity(){
                                 modifier = Modifier.height(180.dp)
                             )
                         }
-                        LoginFields()
+                        LoginFieldsAndButton(
+                            scaffoldState,
+                            scope
+                        )
                     }
                     Column(
                         verticalArrangement = Arrangement.Bottom
@@ -162,12 +190,6 @@ class LoginActivity : ComponentActivity(){
                 }
             }
         }
-    }
-
-    @Preview(name = "Light Mode", showBackground = true)
-    @Composable
-    fun Preview(){
-        LoginScreen()
     }
 }
 
