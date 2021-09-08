@@ -36,6 +36,12 @@
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.JetpackComposeLearning.NoActionBar">
+        </activity>
+        <activity
+            android:name=".ConstraintLayoutActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.JetpackComposeLearning.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
